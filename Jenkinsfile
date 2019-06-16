@@ -42,7 +42,7 @@ pipeline {
         stage ('Delivery on VM'){
             steps{
                 script{
-                    sh 'ssh root@165.83.22.120 mkdir test'
+                    sh 'echo "Hello there" > test'
                 }
             }
         }

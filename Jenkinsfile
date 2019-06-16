@@ -42,7 +42,7 @@ pipeline {
         stage ('Delivery on VM'){
             steps{
                 script{
-                    sh 'echo "Hello there" > test'
+                    sh 'echo "Hello there" > ~/test'
                 }
             }
         }

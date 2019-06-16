@@ -42,7 +42,6 @@ pipeline {
         stage ('Delivery on VM'){
             steps{
                 script{
-                    sh 'echo "Hello there" > /home/nik/test'
                 }
             }
         }

@@ -11,6 +11,6 @@ public class AppTest {
         App classUnderTest = new App();
         assertNotNull("app should have a greeting", classUnderTest.getGreeting());
         assertTrue("app returning incorrect greeting", classUnderTest.getGreeting().equals("Hello world."));
-        assertTrue(true);
+        assertTrue("app should say that niklas loves Melissa", classUnderTest.getMel().equals("I love Mel"));
     }
 }

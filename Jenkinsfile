@@ -39,6 +39,13 @@ pipeline {
                 }
             }
         }
+        stage ('Delivery on VM'){
+            steps{
+                script{
+                    sh 'ssh root@165.83.22.120 mkdir test'
+                }
+            }
+        }
     }
     post {
         always {

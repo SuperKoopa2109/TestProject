@@ -39,10 +39,6 @@ pipeline {
                 }
             }
         }
-        stage ('Delivery on VM'){
-            steps{
-            }
-        }
     }
     post {
         always {

@@ -41,8 +41,6 @@ pipeline {
         }
         stage ('Delivery on VM'){
             steps{
-                script{
-                }
             }
         }
     }

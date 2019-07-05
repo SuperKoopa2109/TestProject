@@ -6,6 +6,56 @@
  * User Manual available at https://docs.gradle.org/5.4.1/userguide/tutorial_java_projects.html
  */
 
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.5.RELEASE"
+    }
+}
+
+// ---------------bmuschko-----------------
+/*
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:4.10.0'
+    }
+}
+*/
+// ---------------bmuschko-----------------
+
+//-------------------------------------
+
+
+buildscript {
+
+    repositories {
+
+        //this plugin will be pulled from jcenter
+
+        jcenter()
+
+    }
+
+    dependencies {
+
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+
+    }
+
+}
+
+
+
+
+//-----------------------------------
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -13,29 +63,44 @@ plugins {
     // Do code coverage
     id 'jacoco'
 
+    // For the Hosting
+    id "org.springframework.boot" version "2.1.5.RELEASE"
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+
     // Apply the application plugin to add support for building an application
     id 'application'
 
     // Create distribution jar
     id 'java-library-distribution'
+
+    //id 'com.bmuschko.docker-remote-api' version '4.10.0'
 }
+
+
 
 jacoco{
     toolVersion = "0.8.2"
 }
 
+/*
 jar {
     manifest {
-        attributes 'Main-Class' : 'com.kaspareit.niklas.TestProject.App'
+        attributes 'Main-Class' : 'com.kaspareit.niklas.testproj.main'
     }
     baseName = 'greet-program'
     version = '0.1.0'
 }
-
+*/
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
     jcenter()
+    allprojects {
+        repositories {
+            maven { url 'https://jitpack.io' }
+        }
+    }
 }
 
 dependencies {
@@ -44,7 +109,80 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+
+
+    implementation 'org.springframework.boot:spring-boot-dependencies:2.1.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //implementation 'org.springframework.boot:spring-web'
+    //implementation 'org.springframework.boot:spring-beans:5.1.7.RELEASE'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //classpath('se.transmode.gradle:gradle-docker:1.2')
+
+    /*components {
+        withModule('org.springframework:spring-beans') {
+            allVariants {
+                withDependencyConstraints {
+                    // Need to patch constraints because snakeyaml is an optional dependency
+                    it.findAll { it.name == 'snakeyaml' }.each { it.version { strictly '1.19' } }
+                }
+            }
+        }
+    }*/
+
+}
+
+apply plugin: "org.springframework.boot"
+//apply plugin: 'com.bmuschko.docker-remote-api'
+
+/*
+apply plugin: 'docker'
+
+
+docker {
+
+    maintainer = 'Niklas'
+
+}
+
+distDocker {
+    exposePort 9090
+}
+
+group = 'kaspirat'
+sourceCompatibility = 1.8
+*/
+
+
+// Import task types
+//import com.bmuschko.gradle.docker.tasks.image.*
+
+/*
+// Use task types
+task buildMyAppImage(type:  com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
+    inputDir = file('docker/myapp')
+    tags.add('test/myapp:latest')
+}*/
+
+apply plugin: 'docker'
+
+task buildDocker(type: Docker, dependsOn: build){
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst{
+        copy{
+            from jar
+            into stageDir
+        }
+    }
 }
 
 // Define the main class for the application
-mainClassName = 'TestProject.App'
+mainClassName = "main"
+
+
+
+
+
+

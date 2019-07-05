@@ -40,6 +40,22 @@ pipeline {
             }
         }
     }
+	stage ('Delivery'){
+	  steps{
+	    script{
+	      echo '***Application is being delivered to the machine***'
+	      sh './gradlew build docker'
+	    }
+	  }
+	}
+	stage ('Deployment'){
+	  steps{
+	    script{
+	      echo '***Application is being deployed to the machine***'
+	      sh 'docker run -p 9001:9011 mbition/spring-boot-app'
+	    }
+	  }
+	}
     post {
         always {
             echo 'Post'
